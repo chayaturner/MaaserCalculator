@@ -15,6 +15,10 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
+
+// CheckViews:
+// http://www.mysamplecode.com/2012/07/android-listview-checkbox-example.html
+
 public class MainActivity extends AppCompatActivity {
 
     EditText input;
