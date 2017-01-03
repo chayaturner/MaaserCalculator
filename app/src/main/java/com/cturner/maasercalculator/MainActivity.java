@@ -8,8 +8,20 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.RadioGroup;
+
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+
+    EditText input;
+    private Maaser maaser;
+    private final String mKey = "MAASER";
+    private CheckListAdapter mAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +38,36 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        if(savedInstanceState != null){
+            maaser = restoreFromJSon(savedInstanceState.getString(mKey));
+        } else {
+            maaser = new Maaser();
+        }
+
+        displayListView();
+    }
+
+    private void displayListView() {
+        mAdapter = new CheckListAdapter(this, R.layout.list_layout, maaser.getList());
+    }
+
+
+    private Maaser restoreFromJSon(String json) {
+        Gson gson = new Gson();
+        return gson.fromJson(json, Maaser.class);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
+        outState.putString(mKey, getJSONof(maaser));
+
+    }
+
+    private String getJSONof(Maaser maaser) {
+        Gson gson = new Gson();
+        return gson.toJson(maaser);
     }
 
     @Override
@@ -48,5 +90,30 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void calculateClick(View view) {
+
+        RadioGroup group = (RadioGroup) findViewById(R.id.radioGroup);
+        group.getCheckedRadioButtonId();
+
+        EditText editText = (EditText) findViewById(R.id.amountText);
+        Double amount = Double.parseDouble(editText.getText().toString());
+
+        switch (group.getCheckedRadioButtonId()){
+            case R.id.radioButton10:
+                Amount a = new Amount(amount, amount*.10);
+                maaser.addAmount(amount);
+                maaser.addMaaserAmount(amount * 0.10);
+                break;
+            case R.id.radioButton15:
+                maaser.addAmount(amount);
+                maaser.addMaaserAmount(amount * 0.15);
+                break;
+            case R.id.radioButton20:
+                maaser.addAmount(amount);
+                maaser.addMaaserAmount(amount * 0.20);
+                break;
+        }
     }
 }
