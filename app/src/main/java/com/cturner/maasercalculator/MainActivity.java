@@ -1,5 +1,6 @@
 package com.cturner.maasercalculator;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -14,6 +15,8 @@ import android.widget.ListView;
 import android.widget.RadioGroup;
 
 import com.google.gson.Gson;
+
+import java.util.ArrayList;
 
 
 // CheckViews:
@@ -42,15 +45,20 @@ public class MainActivity extends AppCompatActivity {
                 Snackbar.make(view, "You paid your maaser!", Snackbar.LENGTH_LONG)
                        .setAction("Action", null).show();
 
+                //get all checked items
                 SparseBooleanArray checkedAmounts = mListView.getCheckedItemPositions();
+
                 for(int i = 0; i < checkedAmounts.size(); i++){
                    if(checkedAmounts.get(i)) {
-                       maaser.removeMaaserAmount(i);
+                       maaser.getMaaserAmountsList().set(i, 0.0); //sets checked to 0\
                    }
                 }
+                //arraylist to hold "0" to remove all 0's from maaser list
+                ArrayList<Double> list = new ArrayList<Double>();
+                list.add(0.0);
+                maaser.getMaaserAmountsList().removeAll(list);
 
                 mAdapter.notifyDataSetChanged();
-
             }
         });
 
@@ -82,7 +90,41 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState){
         super.onSaveInstanceState(outState);
         outState.putString(mKey, getJSONof(maaser));
+    }
 
+    @Override
+    protected void onPause(){
+        super.onPause();
+
+        SharedPreferences preferences = getSharedPreferences(mKey, MODE_PRIVATE);
+
+        // Create an Editor object to write changes to the preferences object above
+        SharedPreferences.Editor editor = preferences.edit();
+
+        // clear whatever was set last time
+        editor.clear();
+
+        // save autoSave preference
+        editor.putString(mKey, getJSONof(maaser));
+        editor.apply();
+
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+
+        SharedPreferences preferences = getSharedPreferences(mKey, MODE_PRIVATE);
+
+        // Create an Editor object to write changes to the preferences object above
+        SharedPreferences.Editor editor = preferences.edit();
+
+        // clear whatever was set last time
+        editor.clear();
+
+        // save autoSave preference
+        editor.putString(mKey, getJSONof(maaser));
+        editor.apply();
     }
 
     @Override
