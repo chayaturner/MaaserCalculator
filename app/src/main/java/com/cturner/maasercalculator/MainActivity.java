@@ -5,15 +5,15 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.RadioGroup;
 
 import com.google.gson.Gson;
-
-import java.util.ArrayList;
 
 
 // CheckViews:
@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private Maaser maaser;
     private final String mKey = "MAASER";
     private CheckListAdapter mAdapter;
+    private ListView mListView;
 
 
     @Override
@@ -38,8 +39,18 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Snackbar.make(view, "You paid your maaser!", Snackbar.LENGTH_LONG)
+                       .setAction("Action", null).show();
+
+                SparseBooleanArray checkedAmounts = mListView.getCheckedItemPositions();
+                for(int i = 0; i < checkedAmounts.size(); i++){
+                   if(checkedAmounts.get(i)) {
+                       maaser.removeMaaserAmount(i);
+                   }
+                }
+
+                mAdapter.notifyDataSetChanged();
+
             }
         });
 
@@ -53,7 +64,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void displayListView() {
-        mAdapter = new CheckListAdapter(this, R.layout.list_layout, maaser.getList());
+        mAdapter = new CheckListAdapter(this, R.layout.list_layout, maaser.getMaaserAmountsList());
+        mListView = (ListView)findViewById(R.id.maaserList);
+        //set the adapter for the listView
+        mListView.setAdapter(mAdapter);
+        //Enable checkboxes more than one at a time
+        mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
     }
 
 
@@ -67,6 +83,12 @@ public class MainActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putString(mKey, getJSONof(maaser));
 
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState){
+        super.onRestoreInstanceState(savedInstanceState);
+        maaser = restoreFromJSon(savedInstanceState.getString(mKey));
     }
 
     private String getJSONof(Maaser maaser) {
@@ -102,22 +124,25 @@ public class MainActivity extends AppCompatActivity {
         group.getCheckedRadioButtonId();
 
         EditText editText = (EditText) findViewById(R.id.amountText);
-        Double amount = Double.parseDouble(editText.getText().toString());
 
-        switch (group.getCheckedRadioButtonId()){
-            case R.id.radioButton10:
-                Amount a = new Amount(amount, amount*.10);
-                maaser.addAmount(amount);
-                maaser.addMaaserAmount(amount * 0.10);
-                break;
-            case R.id.radioButton15:
-                maaser.addAmount(amount);
-                maaser.addMaaserAmount(amount * 0.15);
-                break;
-            case R.id.radioButton20:
-                maaser.addAmount(amount);
-                maaser.addMaaserAmount(amount * 0.20);
-                break;
-        }
+            Double amount = Double.parseDouble(editText.getText().toString());
+
+            switch (group.getCheckedRadioButtonId()){
+                case R.id.radioButton10:
+                    Amount a = new Amount(amount, amount*.10);
+                    maaser.addMaaserAmount(amount * 0.10);
+                    break;
+                case R.id.radioButton15:
+                    maaser.addMaaserAmount(amount * 0.15);
+                    break;
+                case R.id.radioButton20:
+                    maaser.addMaaserAmount(amount * 0.20);
+                    break;
+            }
+
+        //let adapter know that data has changed
+        mAdapter.notifyDataSetChanged();
     }
+
+
 }

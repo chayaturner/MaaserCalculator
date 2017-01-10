@@ -14,5 +14,19 @@ public class Amount {
         this.maaserAmount = maaserAmount;
     }
 
+    public Double getMaaserAmount() {
+        return maaserAmount;
+    }
 
+    public Boolean getPaid() {
+        return paid;
+    }
+
+    public void setPaid(){
+        paid = true;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
 }

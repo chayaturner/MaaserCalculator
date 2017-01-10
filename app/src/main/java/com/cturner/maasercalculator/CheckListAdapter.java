@@ -5,7 +5,6 @@ import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
 
-
 /**
  * Created by cturner on 1/3/2017.
  */

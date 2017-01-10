@@ -19,7 +19,7 @@
         android:inputType="numberDecimal"
         android:ems="10"
         android:id="@+id/amountText"
-        android:text="Enter Amount"
+        android:hint="Enter Amount"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
@@ -64,22 +64,21 @@
             android:text="@string/_10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/radioButton10"
-            android:onClick="onRadioClick"/>
+            android:id="@+id/radioButton10" />
 
         <RadioButton
             android:text="@string/_15"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/radioButton15"
-            android:onClick="onRadioClick"/>
+            android:id="@+id/radioButton15" />
 
         <RadioButton
             android:text="@string/_20"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/radioButton20"
-            android:onClick="onRadioClick"/>
+            android:id="@+id/radioButton20" />
     </RadioGroup>
+
+
 
 </RelativeLayout>

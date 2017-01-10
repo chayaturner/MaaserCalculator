@@ -8,32 +8,17 @@ import java.util.ArrayList;
 
 public class Maaser {
 
-    ArrayList<Double> amounts;
     ArrayList<Double> maaserAmounts;
-    Double totalAmounts;
     Double totalMaaserAmounts;
 
     public Maaser(){
-        amounts = new ArrayList<Double>();
         maaserAmounts = new ArrayList<Double>();
-        totalAmounts = 0.0;
         totalMaaserAmounts = 0.0;
-    }
-
-    public void addAmount(Double amount){
-        amounts.add(amount);
-        totalAmounts += amount;
     }
 
     public void addMaaserAmount(Double amount){
         maaserAmounts.add(amount);
         totalMaaserAmounts += amount;
-    }
-
-    public void deleteAmount(Double amount){
-        int index = amounts.indexOf(amount);
-        amounts.remove(index);
-        totalAmounts -= amount;
     }
 
     public void deleteMaaserAmount(Double amount){
@@ -42,14 +27,15 @@ public class Maaser {
             totalMaaserAmounts -= amount;
     }
 
-    public Double getTotalAmounts(){
-        return totalAmounts;
-    }
     public Double getTotalMaaserAmounts(){ return totalMaaserAmounts;}
 
-    public ArrayList<Double> getAmountList(){
-        return amounts;
+    public ArrayList<Double> getMaaserAmountsList() {
+        return maaserAmounts;
     }
-    public ArrayList<Double> getMaaserAmountList(){return maaserAmounts;}
+
+    public void removeMaaserAmount(int index){
+        totalMaaserAmounts -= maaserAmounts.get(index);
+        maaserAmounts.remove(index);
+    }
 
 }
