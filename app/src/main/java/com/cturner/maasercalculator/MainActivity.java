@@ -6,13 +6,16 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 
@@ -29,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private final String mKey = "MAASER";
     private CheckListAdapter mAdapter;
     private ListView mListView;
+    private View mSBContainer;
 
 
     @Override
@@ -37,28 +41,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        mSBContainer=findViewById(R.id.activity_main);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "You paid your maaser!", Snackbar.LENGTH_LONG)
-                       .setAction("Action", null).show();
-
-                //get all checked items
-                SparseBooleanArray checkedAmounts = mListView.getCheckedItemPositions();
-
-                for(int i = 0; i < checkedAmounts.size(); i++){
-                   if(checkedAmounts.get(i)) {
-                       maaser.getMaaserAmountsList().set(i, 0.0); //sets checked to 0\
-                   }
-                }
-                //arraylist to hold "0" to remove all 0's from maaser list
-                ArrayList<Double> list = new ArrayList<Double>();
-                list.add(0.0);
-                maaser.getMaaserAmountsList().removeAll(list);
-
-                mAdapter.notifyDataSetChanged();
+                fabOnClick(view);
             }
         });
 
@@ -70,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
 
         displayListView();
     }
+
+
 
     private void displayListView() {
         mAdapter = new CheckListAdapter(this, R.layout.list_layout, maaser.getMaaserAmountsList());
@@ -167,24 +158,61 @@ public class MainActivity extends AppCompatActivity {
 
         EditText editText = (EditText) findViewById(R.id.amountText);
 
-            Double amount = Double.parseDouble(editText.getText().toString());
-
+        String entry = editText.getText().toString();
+        if(entry.matches("")){
+           Snackbar.make(mSBContainer, "Enter a number!!", Snackbar.LENGTH_SHORT).show();
+        }else{
+            Double amount = Double.parseDouble(entry);
+            Log.d("DOUBLE", "Amount added: " + amount);
             switch (group.getCheckedRadioButtonId()){
                 case R.id.radioButton10:
-                    Amount a = new Amount(amount, amount*.10);
                     maaser.addMaaserAmount(amount * 0.10);
+                    Log.d("MAASERADD", "Amount of objects in Maaser list " + maaser.getMaaserAmountsList().size());
+                    mAdapter.add(amount * 0.10);
                     break;
                 case R.id.radioButton15:
                     maaser.addMaaserAmount(amount * 0.15);
+                    mAdapter.add(amount * 0.15);
                     break;
                 case R.id.radioButton20:
                     maaser.addMaaserAmount(amount * 0.20);
+                    mAdapter.add(amount * 0.2);
                     break;
             }
 
-        //let adapter know that data has changed
-        mAdapter.notifyDataSetChanged();
+
+            //let adapter know that data has changed
+         mAdapter.notifyDataSetChanged();
+
+        }
     }
 
+    private void fabOnClick(View view) {
+        //get all checked items
+        SparseBooleanArray checkedAmounts = mListView.getCheckedItemPositions();
+        boolean checkedItem = false;
+
+        for(int i = 0; i < checkedAmounts.size(); i++){
+            if(checkedAmounts.valueAt(i)) {
+                checkedItem=true;
+                maaser.getMaaserAmountsList().set(checkedAmounts.keyAt(i), 0.0); //sets checked to 0
+                mListView.setItemChecked(checkedAmounts.keyAt(i), false);
+            }
+        }
+        if(checkedItem) {
+            //arraylist to hold "0" to remove all 0's from maaser list
+            ArrayList<Double> list = new ArrayList<Double>();
+            list.add(0.0);
+            maaser.getMaaserAmountsList().removeAll(list); //remove all 0's (set above) from list
+
+            mAdapter.clear();
+            mAdapter.addAll(maaser.getMaaserAmountsList());
+
+            mAdapter.notifyDataSetChanged();
+
+
+            Snackbar.make(mSBContainer, "You paid your maaser!", Snackbar.LENGTH_LONG).show();
+        }
+    }
 
 }

@@ -64,7 +64,8 @@
             android:text="@string/_10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/radioButton10" />
+            android:id="@+id/radioButton10"
+            android:checked="true"/>
 
         <RadioButton
             android:text="@string/_15"

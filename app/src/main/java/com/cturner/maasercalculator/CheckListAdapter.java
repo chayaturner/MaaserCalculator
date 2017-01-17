@@ -18,4 +18,6 @@ public class CheckListAdapter extends ArrayAdapter<Double>{
         this.maaserList = new ArrayList<Double>();
         this.maaserList.addAll(maaserList);
     }
+
+
 }
