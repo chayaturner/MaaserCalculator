@@ -1,9 +1,11 @@
 package com.cturner.maasercalculator;
 
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -144,11 +146,42 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_about) {
+            showInfoDialog("About", "Welcome to Maaser Calculator!" +
+                    " Enter your earnings, and choose a percentage to calculate your maaser." +
+                    " Your amounts will be added to the list. You can check off your items" +
+                    " and click PAY to remove them.");
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    //show dialog with message from about menu button
+    private void showInfoDialog (String strTitle, String strMsg)
+    {
+        // create the listener for the dialog
+        final DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener ()
+        {
+            @Override
+            public void onClick (DialogInterface dialog, int which)
+            {
+                //nothing needed to do here
+            }
+        };
+
+        // Create the AlertDialog.Builder object
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder (MainActivity.this);
+
+        // Use the AlertDialog's Builder Class methods to set the title, icon, message, et al.
+        // These could all be chained as one long statement, if desired
+        alertDialogBuilder.setTitle (strTitle);
+        alertDialogBuilder.setIcon (android.R.drawable.ic_dialog_info);
+        alertDialogBuilder.setMessage (strMsg);
+        alertDialogBuilder.setCancelable (true);
+        alertDialogBuilder.setNeutralButton (getString (android.R.string.ok), listener);
+
+        // Create and Show the Dialog
+        alertDialogBuilder.show ();
     }
 
     public void calculateClick(View view) {
