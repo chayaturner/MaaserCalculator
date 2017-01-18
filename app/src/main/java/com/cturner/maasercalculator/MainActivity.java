@@ -161,25 +161,27 @@ public class MainActivity extends AppCompatActivity {
         String entry = editText.getText().toString();
         if(entry.matches("")){
            Snackbar.make(mSBContainer, "Enter a number!!", Snackbar.LENGTH_SHORT).show();
-        }else{
+        }
+        else{
             Double amount = Double.parseDouble(entry);
             Log.d("DOUBLE", "Amount added: " + amount);
             switch (group.getCheckedRadioButtonId()){
                 case R.id.radioButton10:
-                    maaser.addMaaserAmount(amount * 0.10);
-                    Log.d("MAASERADD", "Amount of objects in Maaser list " + maaser.getMaaserAmountsList().size());
-                    mAdapter.add(amount * 0.10);
+                    amount = amount * 0.10;
                     break;
                 case R.id.radioButton15:
-                    maaser.addMaaserAmount(amount * 0.15);
-                    mAdapter.add(amount * 0.15);
+                    amount *= .15;
                     break;
                 case R.id.radioButton20:
-                    maaser.addMaaserAmount(amount * 0.20);
-                    mAdapter.add(amount * 0.2);
+                    amount *= .2;
                     break;
             }
 
+            //add amount
+            maaser.addMaaserAmount(amount);
+            Log.d("MAASERADD", "Amount of objects in Maaser list " + maaser.getMaaserAmountsList().size());
+            mAdapter.add(amount);
+            Log.d("AdapterADD", "Amount of objects in Adapter "+ mAdapter.getCount()+"\tAmount of objects in Maaser list " + maaser.getMaaserAmountsList().size());
 
             //let adapter know that data has changed
          mAdapter.notifyDataSetChanged();
