@@ -31,4 +31,8 @@ public class Maaser {
         maaserAmounts.remove(index);
     }
 
+    public void setMaaserAmountsList(ArrayList<Double> updatedList) {
+        this.maaserAmounts.clear();
+        this.maaserAmounts.addAll(updatedList);
+    }
 }

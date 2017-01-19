@@ -82,6 +82,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState){
         super.onSaveInstanceState(outState);
+
+        //set updated maaser list from the GUI
+        ArrayList<Double> updatedList = new ArrayList<Double>();
+        for(int i = 0; i<mAdapter.getCount(); i++){
+            updatedList.add(mAdapter.getItem(i));
+        }
+        maaser.setMaaserAmountsList(updatedList);
         outState.putString(mKey, getJSONof(maaser));
     }
 
@@ -96,6 +103,13 @@ public class MainActivity extends AppCompatActivity {
 
         // clear whatever was set last time
         editor.clear();
+
+        //set updated maaser list
+        ArrayList<Double> updatedList = new ArrayList<Double>();
+        for(int i = 0; i<mAdapter.getCount(); i++){
+            updatedList.add(mAdapter.getItem(i));
+        }
+        maaser.setMaaserAmountsList(updatedList);
 
         // save autoSave preference
         editor.putString(mKey, getJSONof(maaser));
@@ -211,8 +225,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             //add amount
-            maaser.addMaaserAmount(amount);
-            Log.d("MAASERADD", "Amount of objects in Maaser list " + maaser.getMaaserAmountsList().size());
+//            maaser.addMaaserAmount(amount);
+//            Log.d("MAASERADD", "Amount of objects in Maaser list " + maaser.getMaaserAmountsList().size());
             mAdapter.add(amount);
             Log.d("AdapterADD", "Amount of objects in Adapter "+ mAdapter.getCount()+"\tAmount of objects in Maaser list " + maaser.getMaaserAmountsList().size());
 
@@ -230,24 +244,25 @@ public class MainActivity extends AppCompatActivity {
         for(int i = 0; i < checkedAmounts.size(); i++){
             if(checkedAmounts.valueAt(i)) {
                 checkedItem=true;
-                maaser.getMaaserAmountsList().set(checkedAmounts.keyAt(i), 0.0); //sets checked to 0
+//                maaser.getMaaserAmountsList().set(checkedAmounts.keyAt(i), 0.0); //sets checked to 0
+                mAdapter.remove(mAdapter.getItem(checkedAmounts.keyAt(i)));
                 mListView.setItemChecked(checkedAmounts.keyAt(i), false);
             }
         }
-        if(checkedItem) {
-            //arraylist to hold "0" to remove all 0's from maaser list
-            ArrayList<Double> list = new ArrayList<Double>();
-            list.add(0.0);
-            maaser.getMaaserAmountsList().removeAll(list); //remove all 0's (set above) from list
-
-            mAdapter.clear();
-            mAdapter.addAll(maaser.getMaaserAmountsList());
+       if(checkedItem) {
+//            //arraylist to hold "0" to remove all 0's from maaser list
+//            ArrayList<Double> list = new ArrayList<Double>();
+//            list.add(0.0);
+//            maaser.getMaaserAmountsList().removeAll(list); //remove all 0's (set above) from list
+//
+//            mAdapter.clear();
+//            mAdapter.addAll(maaser.getMaaserAmountsList());
 
             mAdapter.notifyDataSetChanged();
 
 
             Snackbar.make(mSBContainer, "You paid your maaser!", Snackbar.LENGTH_LONG).show();
-        }
+       }
     }
 
 }
