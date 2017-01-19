@@ -241,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
         SparseBooleanArray checkedAmounts = mListView.getCheckedItemPositions();
         boolean checkedItem = false;
 
-        for(int i = 0; i < checkedAmounts.size(); i++){
+        for(int i = checkedAmounts.size()-1; i > -1; i--){
             if(checkedAmounts.valueAt(i)) {
                 checkedItem=true;
 //                maaser.getMaaserAmountsList().set(checkedAmounts.keyAt(i), 0.0); //sets checked to 0
@@ -249,6 +249,8 @@ public class MainActivity extends AppCompatActivity {
                 mListView.setItemChecked(checkedAmounts.keyAt(i), false);
             }
         }
+
+
        if(checkedItem) {
 //            //arraylist to hold "0" to remove all 0's from maaser list
 //            ArrayList<Double> list = new ArrayList<Double>();
